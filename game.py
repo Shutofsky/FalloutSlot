@@ -6,8 +6,13 @@ background_5_filename = 'W2.JPG'
 background_6_filename = 'W3.JPG'
 background_slot_filename = 'slot.JPG'
 
-import pygame, random, time, os
+import pygame, random, time, os, serial
 from pygame.locals import *
+
+ser = serial.Serial()
+ser.baudrate = 9600
+ser.port = 'COM3'
+ser.open()
 
 slot_pic = dict()
 winner = dict()
@@ -21,6 +26,8 @@ win = [[[0,0,0]], \
        [[4,4,4], [1,5,5], [1,4,6], [1,5,6], [2,5,6], [2,6,6]], \
        [[5,5,5], [1,6,6]], \
        [[6,6,6]]]
+
+sMsg = ['0', '1', '2', '3', '4']
 
 def game(screen):
 
@@ -121,7 +128,7 @@ def game(screen):
                         while j < j_end:
                             screen.blit(slot_pic[random.randint(1,6)], (x_pos[i - 1], 100))
                             pygame.display.update()
-                            pygame.time.delay(100+j*10)
+                            pygame.time.delay(100+j*20)
                             j+=1
 
                         screen.blit(slot_pic[tr], (x_pos[i - 1], 100))
@@ -132,7 +139,6 @@ def game(screen):
                     for i in (1, 2, 3, 4):
                         for l in win[i]:
                             res = list(set(sl) ^ set(l))
-#                            print("L=", l, " SL=", sl, " I=",i," Res=",res," L=",len(res))
                             if len(res) == 0:
                                 w_l = i
                                 break
@@ -141,6 +147,7 @@ def game(screen):
 
 #                    print(w_l)
                     screen.blit(winner[w_l], (200,480))
+                    ser.write(sMsg[w_l])
                     pygame.display.update()
                     pygame.time.delay(5000)
 

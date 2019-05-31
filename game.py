@@ -8,6 +8,7 @@ background_slot_filename = 'slot.JPG'
 
 import pygame, random, time, os, serial
 from pygame.locals import *
+from serial import Serial
 
 ser = serial.Serial()
 ser.baudrate = 9600

@@ -9,6 +9,14 @@ background_slot_filename = 'slot.JPG'
 import pygame, random, time, os
 from pygame.locals import *
 
+import serial
+from serial import Serial
+
+ser = serial.Serial()
+ser.baudrate = 9600
+ser.port = 'COM3'
+ser.open()
+
 slot_pic = dict()
 winner = dict()
 sl = []
@@ -21,6 +29,8 @@ win = [[[0,0,0]], \
        [[4,4,4], [1,5,5], [1,4,6], [1,5,6], [2,5,6], [2,6,6]], \
        [[5,5,5], [1,6,6]], \
        [[6,6,6]]]
+
+sMsg = ['0', '1', '2', '3', '4']
 
 def game(screen):
 
@@ -58,9 +68,9 @@ def game(screen):
     pos = 1
     
     optiona = font5.render("VAULT-BOY SLOT-MACHINE ", True, (0, 0, 0))
-    optionb = font6.render("use the up and down arrow keys and enter",True,(0,0,0))
-    play = font5.render("PLAY" , True,(0,0,0))
-    quit = font5.render("QUIT" , True,(0,0,0))  
+    optionb = font5.render("START!!!",True,(0,0,0))
+#    play = font5.render("PLAY" , True,(0,0,0))
+#    quit = font5.render("QUIT" , True,(0,0,0))  
     
     screen.fill((255,255,255))
     screen.blit(optiona,(40,20))
@@ -77,38 +87,15 @@ def game(screen):
         screen.fill((255,255,255))
         screen.blit(optiona,(40,20))
         screen.blit(optionb,(110,100))
-        screen.blit(play,(350,180))
-        screen.blit(quit,(350,380))
-        screen.blit(image,(300,pos*200))
 
         for event in pygame.event.get():
-           if event.type == QUIT:
-               exit()
-               
-           elif event.type == KEYDOWN:
-            
-               if event.key == K_ESCAPE:
-                     exit()
-               
-               elif event.key == K_DOWN:
-                  pos += 1
-                  if pos > 2: pos = 1
-               elif event.key == K_UP:
-                    pos -= 1
-                    if pos < 1: pos = 2
-                    
-               elif event.key == K_RETURN:
-                
-                    if pos == 2.:  
-                       exit()
-                
-                    if pos == 1.:
-                            screen.fill((255,255,255))
-                            screen.blit(slot1,(50,40))
-                            screen.blit(slot2,(300,40))
-                            screen.blit(slot3,(550,40))
-                            pygame.display.update()
-                            pygame.time.delay(600)
+            if event.type == KEYDOWN and event.key == K_RETURN:
+                    screen.fill((255,255,255))
+                    screen.blit(slot1,(50,40))
+                    screen.blit(slot2,(300,40))
+                    screen.blit(slot3,(550,40))
+                    pygame.display.update()
+                    pygame.time.delay(600)
 
                     sl=[]
 
@@ -121,7 +108,7 @@ def game(screen):
                         while j < j_end:
                             screen.blit(slot_pic[random.randint(1,6)], (x_pos[i - 1], 100))
                             pygame.display.update()
-                            pygame.time.delay(100+j*10)
+                            pygame.time.delay(100+j*20)
                             j+=1
 
                         screen.blit(slot_pic[tr], (x_pos[i - 1], 100))
@@ -132,15 +119,14 @@ def game(screen):
                     for i in (1, 2, 3, 4):
                         for l in win[i]:
                             res = list(set(sl) ^ set(l))
-#                            print("L=", l, " SL=", sl, " I=",i," Res=",res," L=",len(res))
                             if len(res) == 0:
                                 w_l = i
                                 break
                         if w_l != 0:
                             break
 
-#                    print(w_l)
                     screen.blit(winner[w_l], (200,480))
+                    ser.write(sMsg[w_l])
                     pygame.display.update()
                     pygame.time.delay(5000)
 

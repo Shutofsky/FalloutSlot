@@ -1,21 +1,21 @@
-background_1_filename = 'L1.JPG'
-background_2_filename = 'L2.JPG'
-background_3_filename = 'L3.JPG'
-background_4_filename = 'W1.JPG'
-background_5_filename = 'W2.JPG'
-background_6_filename = 'W3.JPG'
-background_slot_filename = 'slot.JPG'
+background_1_filename = 'L1.jpg'
+background_2_filename = 'L2.jpg'
+background_3_filename = 'L3.jpg'
+background_4_filename = 'W1.jpg'
+background_5_filename = 'W2.jpg'
+background_6_filename = 'W3.jpg'
+background_slot_filename = 'slot.jpg'
 
 import pygame, random, time, os
 from pygame.locals import *
 
-import serial
-from serial import Serial
+#import serial
+#from serial import Serial
 
-ser = serial.Serial()
-ser.baudrate = 9600
-ser.port = 'COM3'
-ser.open()
+#ser = serial.Serial()
+#ser.baudrate = 9600
+#ser.port = '/dev/ttyS0'
+#ser.open()
 
 slot_pic = dict()
 winner = dict()
@@ -34,12 +34,12 @@ sMsg = ['0', '1', '2', '3', '4']
 
 def game(screen):
 
-    font1 = pygame.font.Font(os.path.join("Disney.TTF"),36)
-    font2 = pygame.font.Font(os.path.join("Disney.TTF"),72)
-    font3 = pygame.font.Font(os.path.join("Disney.TTF"),24)
-    font4 = pygame.font.Font(os.path.join("Disney.TTF"),60)
-    font5 = pygame.font.Font(os.path.join("Smiley.TTF"),60)
-    font6 = pygame.font.Font(os.path.join("VeraMoBI.TTF"),24)
+    font1 = pygame.font.Font(os.path.join("Disney.ttf"),36)
+    font2 = pygame.font.Font(os.path.join("Disney.ttf"),72)
+    font3 = pygame.font.Font(os.path.join("Disney.ttf"),24)
+    font4 = pygame.font.Font(os.path.join("Disney.ttf"),60)
+    font5 = pygame.font.Font(os.path.join("Smiley.ttf"),60)
+    font6 = pygame.font.Font(os.path.join("VeraMoBI.ttf"),24)
 
     winner[0] = font2.render("LOSE ", True, (0,0,0))
     winner[1] = font2.render("WIN X 1", True, (0, 0, 0))
@@ -106,12 +106,12 @@ def game(screen):
                         j = 0
                         j_end = random.randint(5, 20)
                         while j < j_end:
-                            screen.blit(slot_pic[random.randint(1,6)], (x_pos[i - 1], 100))
+                            screen.blit(slot_pic[random.randint(1,6)], (x_pos[i - 1], 60))
                             pygame.display.update()
                             pygame.time.delay(100+j*20)
                             j+=1
 
-                        screen.blit(slot_pic[tr], (x_pos[i - 1], 100))
+                        screen.blit(slot_pic[tr], (x_pos[i - 1], 60))
                         pygame.display.update()
                         pygame.time.delay(600)
 
@@ -125,8 +125,8 @@ def game(screen):
                         if w_l != 0:
                             break
 
-                    screen.blit(winner[w_l], (200,480))
-                    ser.write(sMsg[w_l])
+                    screen.blit(winner[w_l], (120,240))
+#                    ser.write(sMsg[w_l])
                     pygame.display.update()
                     pygame.time.delay(5000)
 
